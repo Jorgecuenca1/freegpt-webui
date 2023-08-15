@@ -9,3 +9,20 @@ services:
       dockerfile: Dockerfile
     ports:
       - "1338:1338"
+
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - '80:80'
+      - '443:443'
+    links:
+      - freegpt-webui
+    restart: always
+    environment:
+      DOMAINS: 'free.goldchekin.com -> http://freegpt-webui:1338'
+      STAGE: 'staging' # Don't use production until staging works
+      # FORCE_RENEW: 'true'
+    env_file:
+      - .env
+    volumes:
+      - https-portal-data:/var/lib/https-portal
